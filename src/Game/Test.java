@@ -10,7 +10,7 @@ public class Test {
 		@SuppressWarnings("unused")
 		//ControleurSimpleGame csg = new ControleurSimpleGame(sg1);
 		
-		
+
 		BombermanGame bg = new BombermanGame(50);
 		
 		try {

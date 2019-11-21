@@ -5,6 +5,7 @@ public class BombermanGame extends Game {
 	public BombermanGame(int maxtour) {
 		super(maxtour);
 		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override

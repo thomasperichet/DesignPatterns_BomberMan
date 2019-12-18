@@ -1,5 +1,7 @@
 package Game;
 
+import externals.Map;
+
 public class Test {
 
 	public static void main(String[] args) {
@@ -8,17 +10,23 @@ public class Test {
 
 		//SimpleGame sg1 = new SimpleGame(50);
 		@SuppressWarnings("unused")
-		//ControleurSimpleGame csg = new ControleurSimpleGame(sg1);
+		Map map1;
+		try {
+			map1 = new Map("src/layouts/niveau1.lay");
+			BombermanGame bg = new BombermanGame(50,map1);
+			try {
+				ControleurBombermanGame cbg = new ControleurBombermanGame(bg);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		
 
-		BombermanGame bg = new BombermanGame(50);
-		
-		try {
-			ControleurBombermanGame cbg = new ControleurBombermanGame(bg);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		
 		/*

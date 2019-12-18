@@ -12,15 +12,15 @@ import externals.PanelBomberman;
 @SuppressWarnings("serial")
 public class ViewBombermanGame extends JFrame implements Observer  {
 
-	private Game _game;
+	private BombermanGame _bgame;
 	private ControleurBombermanGame _cbg;
 	private PanelBomberman _pb;
 	
-	public ViewBombermanGame(Game game, ControleurBombermanGame cbg, PanelBomberman pb) {
-		_game=game;
+	public ViewBombermanGame(BombermanGame bgame, ControleurBombermanGame cbg, PanelBomberman pb) {
+		_bgame=bgame;
 		_cbg=cbg;
 		_pb=pb;
-		Map map = pb.getMap();
+		Map map = _pb.getMap();
 		JFrame jFrame = new JFrame();
 		jFrame.setTitle("Bomberman");
 		jFrame.setSize(new Dimension(map.getSizeX()*50, map.getSizeY()*50));
@@ -34,7 +34,7 @@ public class ViewBombermanGame extends JFrame implements Observer  {
 	@Override
 	public void update(Observable obs) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

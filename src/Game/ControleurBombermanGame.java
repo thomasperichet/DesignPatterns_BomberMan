@@ -14,7 +14,7 @@ public class ControleurBombermanGame implements InterfaceControleur {
 	
 		_bgame=bgame;
 		_vc = new ViewCommandBomberman(bgame, this);
-		Map map1 = new Map("src/layouts/niveau1.lay");
+		Map map1 = _bgame.getMap();
 		_pb = new PanelBomberman(map1);
 		_vbg = new ViewBombermanGame(bgame,this,_pb);
 		_vc.get_jb_pas().setEnabled(false);
@@ -26,12 +26,12 @@ public class ControleurBombermanGame implements InterfaceControleur {
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
-		_bgame.initializeGame();
 		_vc.get_jb_pas().setEnabled(true);
 		_vc.get_jb_recommencer().setEnabled(false);
 		_vc.get_jb_pause().setEnabled(true);
 		_vc.get_jb_lancer().setEnabled(true);
 		_bgame.init();
+
 	}
 
 	@Override
@@ -39,9 +39,7 @@ public class ControleurBombermanGame implements InterfaceControleur {
 		// TODO Auto-generated method stub
 		_vc.get_jb_lancer().setEnabled(true);
 		_vc.get_jb_pause().setEnabled(false);
-		_bgame.takeTurn();
 		_bgame.step();
-			
 	}
 
 	@Override
@@ -51,6 +49,8 @@ public class ControleurBombermanGame implements InterfaceControleur {
 		_vc.get_jb_pause().setEnabled(true);
 		_vc.get_jb_pas().setEnabled(false);
 		_bgame.launch();
+
+
 	}
 
 	@Override
@@ -59,14 +59,14 @@ public class ControleurBombermanGame implements InterfaceControleur {
 		_vc.get_jb_pause().setEnabled(false);
 		_vc.get_jb_lancer().setEnabled(true);
 		_vc.get_jb_pas().setEnabled(true);
-
 		_bgame.stop();
 	}
 
 	@Override
 	public void setTime(double time) {
 		// TODO Auto-generated method stub
-		
+		_bgame._time=(long) time;
+
 	}
 
 }

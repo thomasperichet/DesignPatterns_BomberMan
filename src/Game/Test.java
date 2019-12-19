@@ -12,8 +12,8 @@ public class Test {
 		@SuppressWarnings("unused")
 		Map map1;
 		try {
-			map1 = new Map("src/layouts/niveau1.lay");
-			BombermanGame bg = new BombermanGame(50,map1);
+			map1 = new Map("src/layouts/niveau2.lay");
+			BombermanGame bg = new BombermanGame(1000,map1);
 			try {
 				ControleurBombermanGame cbg = new ControleurBombermanGame(bg);
 			} catch (Exception e) {
@@ -27,7 +27,10 @@ public class Test {
 
 		
 
-		
+		/*
+		SimpleGame sg1 = new SimpleGame(50);
+		ControleurSimpleGame csg = new ControleurSimpleGame(sg1);
+		*/
 		
 		/*
 		sg1.init();

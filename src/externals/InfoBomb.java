@@ -1,19 +1,21 @@
 package externals;
 
+import Game.AgentBomberman;
+
 public class InfoBomb {
 	
 	private int x;
 	private int y;
 	private int range;
-		
+	private AgentBomberman ab;
 	StateBomb stateBomb;
 
-	public InfoBomb(int x, int y, int range, StateBomb stateBomb) {
+	public InfoBomb(int x, int y, int range, StateBomb stateBomb, AgentBomberman ab) {
 		this.x=x;
 		this.y=y;
 		this.range=range;
 		this.stateBomb = stateBomb;
-
+		this.ab=ab;
 	}
 
 
@@ -57,7 +59,21 @@ public class InfoBomb {
 		this.range = range;
 	}
 
-
+	public void nextState() {
+		System.out.println("Next state");
+		switch (this.stateBomb) {
+		case Step1:
+			this.stateBomb=StateBomb.Step2;
+			break;
+		case Step2:
+			this.stateBomb=StateBomb.Step3;
+			break;
+		default:
+			this.stateBomb=StateBomb.Boom;
+			break;
+		}
+	}
+	public AgentBomberman getAgentBomberman() {return ab;}
 	
 }
 	

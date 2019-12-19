@@ -59,6 +59,8 @@ public class ControleurBombermanGame implements InterfaceControleur {
 		_vc.get_jb_pause().setEnabled(false);
 		_vc.get_jb_lancer().setEnabled(true);
 		_vc.get_jb_pas().setEnabled(true);
+		_vc.get_jb_recommencer().setEnabled(true);
+
 		_bgame.stop();
 	}
 

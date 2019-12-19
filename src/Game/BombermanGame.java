@@ -5,18 +5,33 @@ import java.util.Iterator;
 
 import externals.AgentAction;
 import externals.InfoAgent;
+import externals.InfoBomb;
 import externals.Map;
-
+import externals.StateBomb;
+class coordonnee {
+	int _x;
+	int _y;
+	coordonnee(int x, int y){
+		_x=x;
+		_y=y;
+	}
+}
 public class BombermanGame extends Game {
 	Map _map;
+	Map _mapdebut;
 	ArrayList<Agent> _listeAB;
+	ArrayList<InfoBomb> _listeBombe;
+	boolean[][]	 _listeMurDestruct;
 	public BombermanGame(int maxtour, Map map) {
 		super(maxtour);
 		// TODO Auto-generated constructor stub
 		_map=map;
+		_mapdebut=map;
 		_listeAB = new ArrayList<Agent>();
+		_listeBombe = new ArrayList<InfoBomb>();
+		_listeMurDestruct = _map.getStart_brokable_walls();
 	}
-
+	
 	@Override
 	public void initializeGame() {
 		// TODO Auto-generated method stub
@@ -51,18 +66,26 @@ public class BombermanGame extends Game {
 	@Override
 	public boolean gameContinue() {
 		// TODO Auto-generated method stub
+		for (Agent a : _listeAB) {
+			if(a instanceof AgentBomberman) {
+				return true;
+			}
+		}
 
-		return true;
+		return false;
 	}
 
 	@Override
 	public void gameOver() {
 		// TODO Auto-generated method stub
+		_listeAB.clear();
+		_map=_mapdebut;
 		System.out.println("game over");
 	}
 
 	@Override
 	public void takeTurn() {
+		maj_bomb();
 		// TODO Auto-generated method stub
 		int n;
 		AgentBomberman b = null;
@@ -72,7 +95,7 @@ public class BombermanGame extends Game {
 			}
 		}
 		for (Agent ab : _listeAB) {
-	        n = (int)(Math.random() * 4);
+	        n = (int)(Math.random() * 6);
 	        if(ab instanceof AgentBomberman) {
 		        switch (n) {
 				case 0:
@@ -89,7 +112,10 @@ public class BombermanGame extends Game {
 					break;
 				case 4: 
 					if(isLegalMove(ab,AgentAction.STOP)) {moveAgent(ab,AgentAction.STOP);}
-	
+				case 5:
+					if(peut_poserBombe()) {
+						_listeBombe.add(new InfoBomb(ab.getX(), ab.getY(),3,StateBomb.Step1,(AgentBomberman)ab));
+					}
 				default:
 					break;
 				}
@@ -131,6 +157,7 @@ public class BombermanGame extends Game {
 		return ia;
 	}
 	
+	
 	public boolean isLegalMove(Agent a, AgentAction aa) {
 		switch (aa) {
 		case MOVE_UP:
@@ -141,6 +168,8 @@ public class BombermanGame extends Game {
 			return !(_map.get_walls()[a.getX()-1][a.getY()] ||_map.getStart_brokable_walls()[a.getX()-1][a.getY()] );
 		case MOVE_RIGHT:
 			return !(_map.get_walls()[a.getX()+1][a.getY()] ||_map.getStart_brokable_walls()[a.getX()+1][a.getY()] );
+		case PUT_BOMB:
+			return true;
 		case STOP:
 			return true;
 		default:
@@ -189,28 +218,120 @@ public class BombermanGame extends Game {
 	public int distance(int xa, int ya, int xb, int yb) {
 		return Math.abs(xa-xb)+Math.abs(ya-yb);
 	}
-	
-	public AgentAction strategieEnnemis(Agent ennemi, AgentBomberman ab) {
-
-		int distance = distance(ennemi.getX()+1,ennemi.getY(),ab.getX(),ab.getY());
-		AgentAction ac=AgentAction.MOVE_RIGHT;
+	public ArrayList<coordonnee> voisins(Agent a){
+		ArrayList<coordonnee> liste_coordonnee = new ArrayList<coordonnee>();
 		
-		if(distance(ennemi.getX()-1,ennemi.getY(),ab.getX(),ab.getY())<distance) {
-			distance= distance(ennemi.getX()-1,ennemi.getY(),ab.getX(),ab.getY());
-			ac=AgentAction.MOVE_LEFT;
+		if(!isLegalMove(a, AgentAction.MOVE_LEFT)) {
+			liste_coordonnee.add(new coordonnee(a.getX()-1,a.getY()));
 		}
-		if(distance(ennemi.getX(),ennemi.getY()+1,ab.getX(),ab.getY())<distance) {
-			distance= distance(ennemi.getX(),ennemi.getY()+1,ab.getX(),ab.getY());
-			ac=AgentAction.MOVE_UP;
+		if(!isLegalMove(a, AgentAction.MOVE_RIGHT)) {
+			liste_coordonnee.add(new coordonnee(a.getX()+1,a.getY()));
 		}
-		if(distance(ennemi.getX(),ennemi.getY()-1,ab.getX(),ab.getY())<distance) {
-			distance= distance(ennemi.getX(),ennemi.getY()-1,ab.getX(),ab.getY());
-			ac=AgentAction.MOVE_DOWN;
+		if(!isLegalMove(a, AgentAction.MOVE_UP)) {
+			liste_coordonnee.add(new coordonnee(a.getX(),a.getY()+1));
+		}
+		if(!isLegalMove(a, AgentAction.MOVE_DOWN)) {
+			liste_coordonnee.add(new coordonnee(a.getX(),a.getY()-1));
+		}
+		return liste_coordonnee;
+	}
+	
+	public ArrayList<AgentAction> liste_AA_dispo(Agent a){
+		ArrayList<AgentAction> liste_aa_dispo = new ArrayList<AgentAction>();
+		
+		if(!isLegalMove(a, AgentAction.MOVE_LEFT)) {
+			liste_aa_dispo.add(AgentAction.MOVE_LEFT);
+		}
+		if(!isLegalMove(a, AgentAction.MOVE_RIGHT)) {
+			liste_aa_dispo.add(AgentAction.MOVE_RIGHT);		
+		}
+		if(!isLegalMove(a, AgentAction.MOVE_UP)) {
+			liste_aa_dispo.add(AgentAction.MOVE_UP);		
+		}
+		if(!isLegalMove(a, AgentAction.MOVE_DOWN)) {
+			liste_aa_dispo.add(AgentAction.MOVE_DOWN);
+		}
+		return liste_aa_dispo;
+	}
+	public AgentAction strategieEnnemis(Agent ennemi, AgentBomberman ab) {
+		class cout{
+			int distance_parc;
+			int distance_esti;
+		}
+		int distance = 10000;
+		AgentAction ac = AgentAction.STOP;
+		
+		if(isLegalMove(ennemi, AgentAction.MOVE_RIGHT)) {
+			if(distance(ennemi.getX()+1,ennemi.getY(),ab.getX(),ab.getY())<distance) {
+				distance = distance(ennemi.getX()+1,ennemi.getY(),ab.getX(),ab.getY());
+				ac=AgentAction.MOVE_RIGHT;
+			}
+		}
+		if(isLegalMove(ennemi, AgentAction.MOVE_LEFT)) {
+			if(distance(ennemi.getX()-1,ennemi.getY(),ab.getX(),ab.getY())<distance) {
+				distance= distance(ennemi.getX()-1,ennemi.getY(),ab.getX(),ab.getY());
+				ac=AgentAction.MOVE_LEFT;
+			}
+		}
+		if(isLegalMove(ennemi, AgentAction.MOVE_UP)) {
+			if(distance(ennemi.getX(),ennemi.getY()+1,ab.getX(),ab.getY())<distance) {
+				distance= distance(ennemi.getX(),ennemi.getY()+1,ab.getX(),ab.getY());
+				ac=AgentAction.MOVE_UP;
+			}
+		}	
+		if(isLegalMove(ennemi, AgentAction.MOVE_DOWN)) {
+			if(distance(ennemi.getX(),ennemi.getY()-1,ab.getX(),ab.getY())<distance) {
+				distance= distance(ennemi.getX(),ennemi.getY()-1,ab.getX(),ab.getY());
+				ac=AgentAction.MOVE_DOWN;
+			}
 		}
 		return ac;
+	}
+	public void maj_bomb() {
+		for (Iterator<InfoBomb> iterator = _listeBombe.iterator(); iterator.hasNext();) {
+			InfoBomb bombe = (InfoBomb) iterator.next();
+			
+			if(bombe.getStateBomb()==StateBomb.Boom) {
+				for(int i=1; i<bombe.getRange()+1;i++) {
+					if(est_murDestruct(bombe.getX()+1*i,bombe.getY())) {
+						_listeMurDestruct[bombe.getX()+1*i][bombe.getY()]=false;
+					}
+					if(est_murDestruct(bombe.getX(),bombe.getY()+1*i)) {
+						_listeMurDestruct[bombe.getX()][bombe.getY()+1*i]=false;
+					}
+					if(est_murDestruct(bombe.getX()-1*i,bombe.getY())) {
+						_listeMurDestruct[bombe.getX()-1*i][bombe.getY()]=false;
+					}
+					if(est_murDestruct(bombe.getX(),bombe.getY()-1*i)) {
+						_listeMurDestruct[bombe.getX()][bombe.getY()-1*i]=false;
+					}
+				}
+				iterator.remove();
+			}
+			else
+				bombe.nextState();
+			}	
+	
+	}
+	public boolean est_murDestruct(int x, int y) {
+		if((x<0 || x>=_map.getSizeX()) || (y<0 || y>=_map.getSizeY())) {
+
+			return false;
+		}
+
+		return _listeMurDestruct[x][y];
+	}
+	
+	public boolean peut_poserBombe() {
+		if(_listeBombe.size()<_listeAB.size()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	public Map getMap() {return _map;}
 	
 	public ArrayList<Agent> getListeAgent(){return _listeAB;}
-
+	public ArrayList<InfoBomb> getListeBombe(){return _listeBombe;}
 }

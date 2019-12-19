@@ -19,8 +19,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
-public class ViewCommandBomberman extends JFrame implements ActionListener, Observer {
-	private Game _game;
+public class ViewCommandBomberman extends JPanel implements ActionListener, Observer {
+	private BombermanGame _game;
 	private ControleurBombermanGame _csg;
 	
 	private JButton _jb_recommencer;
@@ -30,7 +30,7 @@ public class ViewCommandBomberman extends JFrame implements ActionListener, Obse
 	private JSlider _js_tour;
 	private JLabel  _jl_tour;
 	
-	public ViewCommandBomberman(Game game, ControleurBombermanGame csg) {
+	public ViewCommandBomberman(BombermanGame game, ControleurBombermanGame csg) {
 		_game = game;
 		_csg = csg;
 		_game.registerObserver(this);

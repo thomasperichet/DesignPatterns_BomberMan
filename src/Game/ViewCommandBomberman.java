@@ -113,9 +113,8 @@ public class ViewCommandBomberman extends JPanel implements ActionListener, Obse
 		
 		panGen.add(panHaut);
 		panGen.add(panBas);
-		jFrame.add(panGen);		
-		
-		jFrame.setVisible(true);
+		//jFrame.add(panGen);		
+		this.add(panGen);
 
 	}
 	

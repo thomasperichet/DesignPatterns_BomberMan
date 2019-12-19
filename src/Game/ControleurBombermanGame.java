@@ -16,7 +16,7 @@ public class ControleurBombermanGame implements InterfaceControleur {
 		_vc = new ViewCommandBomberman(bgame, this);
 		Map map1 = _bgame.getMap();
 		_pb = new PanelBomberman(map1);
-		_vbg = new ViewBombermanGame(bgame,this,_pb);
+		_vbg = new ViewBombermanGame(bgame,this,_pb,_vc);
 		_vc.get_jb_pas().setEnabled(false);
 		_vc.get_jb_recommencer().setEnabled(true);
 		_vc.get_jb_pause().setEnabled(false);

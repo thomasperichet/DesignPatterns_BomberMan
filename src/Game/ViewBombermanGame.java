@@ -20,18 +20,23 @@ public class ViewBombermanGame extends JFrame implements Observer  {
 	private BombermanGame _bgame;
 	private ControleurBombermanGame _cbg;
 	private PanelBomberman _pb;
-	 
-	public ViewBombermanGame(BombermanGame bgame, ControleurBombermanGame cbg, PanelBomberman pb) {
+	private ViewCommandBomberman _vcb;
+	public ViewBombermanGame(BombermanGame bgame, ControleurBombermanGame cbg, PanelBomberman pb,ViewCommandBomberman vcb) {
 		_bgame=bgame;
 		_cbg=cbg;
 		_pb=pb;
+		_vcb=vcb;
 		_bgame.registerObserver(this);
 		Map map = _pb.getMap();
 		JFrame jFrame = new JFrame();
 		jFrame.setTitle("Bomberman");
-		jFrame.setSize(new Dimension(map.getSizeX()*50, map.getSizeY()*50));
-
-		jFrame.add(_pb);
+		jFrame.setSize(new Dimension(map.getSizeX()*50, map.getSizeY()*100));
+		JPanel genPanel = new JPanel();
+		genPanel.setLayout(new GridLayout(2,1,10,10));
+		_pb.setPreferredSize(new Dimension(map.getSizeX()*50, map.getSizeY()*50));
+		genPanel.add(_pb);
+		genPanel.add(vcb);
+		jFrame.add(genPanel);
 
 		jFrame.setVisible(true);
 	}

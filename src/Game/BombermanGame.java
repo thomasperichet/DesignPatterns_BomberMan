@@ -79,6 +79,8 @@ public class BombermanGame extends Game {
 	public void gameOver() {
 		// TODO Auto-generated method stub
 		_listeAB.clear();
+		_listeBombe.clear();
+		_listeMurDestruct=_mapdebut.getStart_brokable_walls();
 		_map=_mapdebut;
 		System.out.println("game over");
 	}
@@ -114,7 +116,7 @@ public class BombermanGame extends Game {
 					if(isLegalMove(ab,AgentAction.STOP)) {moveAgent(ab,AgentAction.STOP);}
 				case 5:
 					if(peut_poserBombe()) {
-						_listeBombe.add(new InfoBomb(ab.getX(), ab.getY(),3,StateBomb.Step1,(AgentBomberman)ab));
+						_listeBombe.add(new InfoBomb(ab.getX(), ab.getY(),2,StateBomb.Step1,(AgentBomberman)ab));
 					}
 				default:
 					break;

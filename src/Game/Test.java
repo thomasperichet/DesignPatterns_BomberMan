@@ -27,7 +27,7 @@ public class Test {
 		@SuppressWarnings("unused")
 		Map map1;
 		try {
-			map1 = new Map("src/layouts/jeu1.lay");
+			map1 = new Map("src/layouts/niveau3.lay");
 			BombermanGame bg = new BombermanGame(1000,map1);
 			try {
 				ControleurBombermanGame cbg = new ControleurBombermanGame(bg);

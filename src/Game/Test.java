@@ -5,6 +5,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
+import Connexion.Connexion;
 import externals.Map;
 
 public class Test {
@@ -26,8 +27,12 @@ public class Test {
 		*/
 		@SuppressWarnings("unused")
 		Map map1;
+		Connexion c = new Connexion();
+		
 		try {
-			map1 = new Map("src/layouts/niveau3.lay");
+			c.setVisible(true);
+			while(!c.getConnecte()) {}
+			map1 = new Map("src/layouts/niveau1.lay");
 			BombermanGame bg = new BombermanGame(1000,map1);
 			try {
 				ControleurBombermanGame cbg = new ControleurBombermanGame(bg);
